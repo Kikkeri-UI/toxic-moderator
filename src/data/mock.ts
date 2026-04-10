@@ -1,4 +1,4 @@
-import { Report, ToxicityType, ImpactLevel } from "@/types";
+import { Report } from "@/types";
 
 const BASE_MESSAGES = [
     { loggedBy: "player_hawk92", message: "You're absolute trash, uninstall the game." },
@@ -10,40 +10,21 @@ const BASE_MESSAGES = [
 ];
 
 /**
- * Helper function that generates random date.
- * @returns a random ISOString converted date
- */
-const getRandomDate = () => {
-    const date = new Date();
-    date.setDate(date.getDate() - Math.floor(Math.random() * 7));
-    return date.toISOString();
-}
-
-/**
  * function to generate random 100+ data sets from provided sample
  * @returns 120 data sets from the sample
  */
-export const generateMockReports = (): Report[] => {
-    return Array.from({ length: 120 }, (_, i) => {
+// src/data/mock.ts
+export const generateMockReports = (count: number): Report[] => {
+    return Array.from({ length: count }, (_, i) => {
         const base = BASE_MESSAGES[i % BASE_MESSAGES.length];
-
-        // Lets show a minor portion of entries as processed.
-        const isProcessed = i < 20;
 
         return {
             id: `rep-${i + 1}`,
-            loggedBy: `${base.loggedBy}_${i}`,
+            loggedBy: `player_${Math.random().toString(36).substring(7)}`,
             message: base.message,
-            status: isProcessed ? "processed" : "pending",
-            taggingDetails: isProcessed ? {
-                types: ["Toxic Behavior"] as ToxicityType[],
-                impact: "Medium" as ImpactLevel,
-                comment: "Automated pre-review for demonstration.",
-                updatedBy: "System Moderator",
-                processedAt: getRandomDate()
-            } : undefined
+            status: "pending",
         };
-    })
-}
+    });
+};
 
-export const MOCK_REPORTS = generateMockReports();
+export const MOCK_REPORTS = generateMockReports(120);
