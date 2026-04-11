@@ -5,10 +5,11 @@ import { MessageTable } from "@/components/dashboard/message-queue";
 import { ProcessedQueue } from "@/components/dashboard/processed-queue";
 import { useMemo, useState } from "react"
 import { TaggingModal } from "@/components/dashboard/tagging-modal"
+import { TaggingFormValues } from "./lib/validations/tagging";
 
 function App() {
 
-  const { reports, stats } = useReports();
+  const { reports, stats, updateReport } = useReports();
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,8 +38,10 @@ function App() {
   };
 
 
-  // TODO: handle submission
-  const handleTagSubmit = () => { }
+  const handleTagSubmit = (id: string, values: TaggingFormValues) => {
+    updateReport(id, values);
+    console.log("Updated Report:", id, values);
+  }
 
   return (
     <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">

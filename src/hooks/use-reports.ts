@@ -3,9 +3,10 @@
  * Calculating stats according to the reports
  */
 
-import React, { useState, useEffect, useMemo } from "react"
+import { useState, useMemo } from "react"
 import { MOCK_REPORTS } from "@/data/mock"
-import { Report } from "@/types"
+import { Report, ToxicityType } from "@/types"
+import { TaggingFormValues } from "@/lib/validations/tagging"
 
 export const useReports = () => {
     const [reports, setReports] = useState<Report[]>(MOCK_REPORTS)
@@ -22,7 +23,31 @@ export const useReports = () => {
         invalid: reports.filter((report) => report.status === "invalid").length
     }), [reports])
 
-    // TODO: handle update functionality 
+    /**
+     * 
+     * @param id id of the report
+     * @param values form values from the tagging modal
+     */
+    const updateReport = (id: string, values: TaggingFormValues) => {
+        setReports((prev) =>
+            prev.map((report): Report =>
+                report.id === id
+                    ? {
+                        ...report,
+                        status: "processed" as const,
+                        taggingDetails: {
+                            ...values,
+                            types: values.types as ToxicityType[],
+                            impact: values.impact,
+                            comment: values.comment || "",
+                            updatedBy: "Current User",
+                            processedAt: new Date().toISOString(),
+                        },
+                    }
+                    : report
+            )
+        );
+    };
 
-    return { reports, stats };
+    return { reports, stats, updateReport };
 }
