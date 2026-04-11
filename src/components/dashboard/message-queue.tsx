@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Report } from "@/types";
-import { Tag, ChevronLeft, ChevronRight } from "lucide-react";
+import { Tag, ChevronLeft, ChevronRight, Edit } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MessageTableProps {
@@ -83,8 +83,8 @@ export function MessageTable({ reports, onTag }: MessageTableProps) {
                                                 onClick={() => onTag(report)}
                                                 className="h-8 cursor-pointer gap-2 border-border hover:border-primary hover:bg-primary/5 hover:text-primary transition-all font-semibold text-xs"
                                             >
-                                                <Tag className="h-3 w-3" />
-                                                Tag
+                                                {isProcessed ? <Edit className="h-3 w-3" /> : <Tag className="h-3 w-3" />}
+                                                {isProcessed ? "Edit" : "Tag"}
                                             </Button>
                                         </TableCell>
                                     </TableRow>

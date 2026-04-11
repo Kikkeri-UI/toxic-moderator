@@ -3,12 +3,24 @@ import { Report } from "@/types";
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
+import { cn, formatDateTime } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface ProcessedQueueProps {
     reports: Report[]
 }
 
 export const ProcessedQueue = ({ reports }: ProcessedQueueProps) => {
+
+    /**
+     * color coded badges to differentiate impact levels better
+     */
+    const IMPACT_STYLES = {
+        Low: "bg-blue-100 text-blue-700 border-blue-200",
+        Medium: "bg-yellow-100 text-yellow-700 border-yellow-200",
+        High: "bg-orange-100 text-orange-700 border-orange-200",
+        Critical: "bg-red-100 text-red-700 border-red-200",
+    };
 
     console.log(reports)
 
@@ -35,7 +47,48 @@ export const ProcessedQueue = ({ reports }: ProcessedQueueProps) => {
                                     No requests have been processed yet.
                                 </TableCell>
                             </TableRow>
-                        ) : (<></>
+                        ) : (<>
+                            {
+                                reports.map((report) => (
+                                    <TableRow key={report.id} className={cn("transition-colors bg-background")}>
+                                        <TableCell className="font-medium text-sm">
+                                            {report.message}
+                                        </TableCell>
+                                        <TableCell className="text-sm text-foreground/80 italic max-w-md truncate">
+                                            "{report.loggedBy}"
+                                        </TableCell>
+                                        <TableCell className="w-[200px]">
+                                            <div className="flex flex-wrap gap-1 py-1">
+                                                {report.taggingDetails?.types.map((type) => (
+                                                    <Badge
+                                                        key={type}
+                                                        variant="secondary"
+                                                        className="text-[9px] px-1.5 py-0 leading-tight bg-muted/50 border-none font-semibold text-muted-foreground whitespace-nowrap"
+                                                    >
+                                                        {type}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </TableCell>
+
+                                        <TableCell>
+                                            <Badge
+                                                className={cn(
+                                                    "text-[10px] font-bold uppercase border",
+                                                    IMPACT_STYLES[report.taggingDetails?.impact as keyof typeof IMPACT_STYLES] || "bg-muted text-muted-foreground"
+                                                )}
+                                            >
+                                                {report.taggingDetails?.impact}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-xs italic">{report.taggingDetails?.comment}</TableCell>
+                                        <TableCell className="text-xs italic">{report.taggingDetails?.updatedBy}</TableCell>
+                                        <TableCell className="text-xs italic">{formatDateTime(report.taggingDetails?.processedAt)}</TableCell>
+
+                                    </TableRow>
+                                ))
+                            }
+                        </>
                         )}
                     </TableBody>
                 </Table>
