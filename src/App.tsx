@@ -1,14 +1,17 @@
 import { useReports } from "@/hooks/use-reports"
 import { StatsBar } from "@/components/dashboard/stats-bar";
-//import './App.css'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageTable } from "@/components/dashboard/message-queue";
 import { ProcessedQueue } from "@/components/dashboard/processed-queue";
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
+import { TaggingModal } from "@/components/dashboard/tagging-modal"
 
 function App() {
 
   const { reports, stats } = useReports();
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   /**
    * Whenever the erports change, filter out tagged reports 
@@ -21,6 +24,21 @@ function App() {
       }
     })
   }, [reports])
+
+
+  /**
+   * Method responsible for setting the selected report
+   * and opening the tagging modal
+   * @param report report value of the selected report
+   */
+  const handleOpenTagModal = (report: Report) => {
+    setSelectedReport(report);
+    setIsModalOpen(true);
+  };
+
+
+  // TODO: handle submission
+  const handleTagSubmit = () => { }
 
   return (
     <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -41,13 +59,20 @@ function App() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="queue">
-          <MessageTable reports={reports} onTag={() => { console.log("Handle tagging") }} />
+          <MessageTable reports={reports} onTag={handleOpenTagModal} />
         </TabsContent>
         <TabsContent value="processed">
           <ProcessedQueue reports={taggedReports} />
         </TabsContent>
 
       </Tabs>
+
+      <TaggingModal
+        report={selectedReport}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleTagSubmit}
+      />
 
     </main>
   )
