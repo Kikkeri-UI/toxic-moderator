@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Report } from "@/types";
 import { Tag, ChevronLeft, ChevronRight, Edit } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, IMPACT_STYLES } from "@/lib/utils";
 
 interface MessageTableProps {
     reports: Report[];
@@ -64,8 +64,46 @@ export function MessageTable({ reports, onTag }: MessageTableProps) {
                                         <TableCell className="text-sm text-foreground/80 italic max-w-md truncate">
                                             "{report.message}"
                                         </TableCell>
-                                        <TableCell className="text-muted-foreground/30 text-xs italic">—</TableCell>
-                                        <TableCell className="text-muted-foreground/30 text-xs italic">—</TableCell>
+                                        {
+                                            isProcessed ? <TableCell className="w-[200px]">
+                                                <div className="flex flex-wrap gap-1 py-1">
+                                                    {report.taggingDetails?.types.map((type) => (
+                                                        <Badge
+                                                            key={type}
+                                                            variant="secondary"
+                                                            className="text-[9px] px-1.5 py-0 leading-tight bg-muted/50 border-none font-semibold text-muted-foreground whitespace-nowrap"
+                                                        >
+                                                            {type}
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </TableCell> : (
+                                                <TableCell className="text-muted-foreground/30 text-xs italic">—</TableCell>
+                                            )
+                                        }
+
+                                        {
+                                            isProcessed ? (
+                                                <TableCell>
+                                                    <Badge
+                                                        className={cn(
+                                                            "text-[10px] font-bold uppercase border",
+                                                            IMPACT_STYLES[report.taggingDetails?.impact as keyof typeof IMPACT_STYLES] || "bg-muted text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {report.taggingDetails?.impact}
+                                                    </Badge>
+                                                </TableCell>
+                                            )
+                                                : (
+                                                    <TableCell className="text-muted-foreground/30 text-xs italic">—</TableCell>
+                                                )
+                                        }
+
+
+
+
+
                                         <TableCell>
                                             <Badge className={cn(
                                                 "text-[10px] font-bold uppercase",
