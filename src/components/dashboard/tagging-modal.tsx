@@ -17,9 +17,10 @@ interface TaggingModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (id: string, values: TaggingFormValues) => void;
+    onReject: (id: string, values: TaggingFormValues) => void;
 }
 
-export function TaggingModal({ report, isOpen, onClose, onSubmit }: TaggingModalProps) {
+export function TaggingModal({ report, isOpen, onClose, onSubmit, onReject }: TaggingModalProps) {
 
     const [toxicityType, setToxicityType] = useState<any>(TOXICITY_TYPES);
     const form = useForm<TaggingFormValues>({
@@ -67,6 +68,33 @@ export function TaggingModal({ report, isOpen, onClose, onSubmit }: TaggingModal
                 types: finalTypes
             }
             onSubmit(report.id, submissionData);
+            onClose();
+            form.reset();
+        }
+    };
+
+    /**
+     * Processes report rejection by capturing moderator feedback and applying invalidation tags.
+     * * This handler ensures that rejected reports are still documented by:
+     * 1. Merging any selected violation types with custom reason input.
+     * 2. Applying a fallback "Invalid/Dismissed" tag if no specific reason was selected.
+     * 3. Passing the complete form state (comments, impact, and types) to the onReject callback.
+     * * @param values - The current state of the tagging form at the time of rejection.
+     */
+    const handleInternalRejection = (values: TaggingFormValues) => {
+        if (report) {
+            let finalTypes = [...values.types];
+
+            if (values.customType && values.customType.trim() !== "") {
+                finalTypes.push(values.customType.trim());
+            }
+
+            // Add a default invalid tag for rejected messages
+            if (finalTypes.length === 0) {
+                finalTypes.push("Invalid/Dismissed");
+            }
+
+            onReject(report.id, { ...values, types: finalTypes });
             onClose();
             form.reset();
         }
@@ -198,8 +226,8 @@ export function TaggingModal({ report, isOpen, onClose, onSubmit }: TaggingModal
                         />
 
                         <DialogFooter className="pt-4 border-t border-border/50">
-                            <Button type="button" variant="ghost" onClick={onClose} className="font-semibold cursor-pointer">
-                                Cancel
+                            <Button type="button" variant="destructive" onClick={() => { handleInternalRejection(form.getValues()) }} className="font-semibold cursor-pointer bg-danger">
+                                Mark Invalid
                             </Button>
                             <Button type="submit" className="font-bold px-8 cursor-pointer">
                                 {report?.taggingDetails ? "Update Tag" : "Confirm Tag"}

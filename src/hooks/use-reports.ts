@@ -24,7 +24,7 @@ export const useReports = () => {
     }), [reports])
 
     /**
-     * 
+     * Update / Tag a report
      * @param id id of the report
      * @param values form values from the tagging modal
      */
@@ -49,5 +49,30 @@ export const useReports = () => {
         );
     };
 
-    return { reports, stats, updateReport };
+    /**
+     * Cancel / Invalid a report
+     * @param id id of the report
+     * @param values form values from the tagging modal
+     */
+    const rejectReport = (id: string, values: TaggingFormValues) => {
+        setReports((prev) =>
+            prev.map((report): Report =>
+                report.id === id
+                    ? {
+                        ...report,
+                        status: "invalid",
+                        taggingDetails: {
+                            types: [],
+                            impact: values.impact,
+                            comment: values.comment || "",
+                            updatedBy: "Current User",
+                            processedAt: new Date().toISOString(),
+                        },
+                    }
+                    : report
+            )
+        );
+    };
+
+    return { reports, stats, updateReport, rejectReport };
 }

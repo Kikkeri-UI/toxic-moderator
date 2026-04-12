@@ -52,8 +52,10 @@ export function MessageTable({ reports, onTag }: MessageTableProps) {
                             paginatedData.map((report, index) => {
 
                                 const isProcessed = report.status === "processed"
+                                const isInvalid = report.status === "invalid"
+
                                 return (
-                                    <TableRow key={report.id} className={cn("transition-colors", report.status === "processed" ? "bg-muted opacity-80" : "bg-background")}>
+                                    <TableRow key={report.id} className={cn("transition-colors", (isProcessed || isInvalid) ? "bg-muted opacity-80" : "bg-background")}>
                                         <TableCell className="text-center font-mono text-xs text-muted-foreground">
                                             {startIndex + index + 1}
                                         </TableCell>
@@ -105,12 +107,18 @@ export function MessageTable({ reports, onTag }: MessageTableProps) {
 
                                         <TableCell>
                                             <Badge className={cn(
-                                                "text-[10px] font-bold uppercase",
-                                                report.status === "processed"
-                                                    ? "bg-blue-50 text-blue-700 border-blue-200"
-                                                    : "bg-impact-high/10 text-impact-high border-impact-high/20"
+                                                "text-[10px] font-bold uppercase border",
+                                                // 1. Processed Style
+                                                report.status === "processed" && "bg-blue-50 text-blue-700 border-blue-200",
+
+                                                // 2. Invalid Style
+                                                report.status === "invalid" && "bg-red-50 text-red-700 border-red-200",
+
+                                                // 3. Pending/Untagged Style
+                                                report.status === "pending" && "bg-impact-high/10 text-impact-high border-impact-high/20"
                                             )}>
-                                                {isProcessed ? "tagged" : "untagged"}
+                                                {/* Display the actual status label */}
+                                                {report.status}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-right">

@@ -1,7 +1,7 @@
-export type ToxicityType = 
-  | 'Harassment' | 'Hate' | 'Threats' | 'Trolling' 
-  | 'Slurs' | 'Abuse' | 'Personal Attack' | 'Discrimination' 
-  | 'Spamming' | 'Toxic Behavior' | 'Bullying' | 'Cheating' | 'Custom';
+export type ToxicityType =
+  | 'Harassment' | 'Hate' | 'Threats' | 'Trolling'
+  | 'Slurs' | 'Abuse' | 'Personal Attack' | 'Discrimination'
+  | 'Spamming' | 'Toxic Behavior' | 'Bullying' | 'Cheating' | 'Custom' | 'Invalid/False Positive';
 
 export type ImpactLevel = 'Low' | 'Medium' | 'High' | 'Critical';
 
@@ -18,6 +18,6 @@ export interface Report {
     impact: ImpactLevel;
     comment?: string;
     updatedBy: string;
-    processedAt: string; 
+    processedAt: string;
   };
 }

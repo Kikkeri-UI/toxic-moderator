@@ -7,9 +7,10 @@ import { useMemo, useState } from "react"
 import { TaggingModal } from "@/components/dashboard/tagging-modal"
 import { TaggingFormValues } from "./lib/validations/tagging";
 
-function App() {
 
-  const { reports, stats, updateReport } = useReports();
+export default function App() {
+
+  const { reports, stats, updateReport, rejectReport } = useReports();
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -41,6 +42,10 @@ function App() {
   const handleTagSubmit = (id: string, values: TaggingFormValues) => {
     updateReport(id, values);
     console.log("Updated Report:", id, values);
+  }
+
+  const handleTagReject = (id: string, values: TaggingFormValues) => {
+    rejectReport(id, values)
   }
 
   return (
@@ -75,10 +80,11 @@ function App() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleTagSubmit}
+        onReject={handleTagReject}
       />
 
     </main>
   )
 }
 
-export default App
+
