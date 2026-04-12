@@ -13,3 +13,11 @@ export const IMPACT_STYLES = {
     High: "bg-orange-100 text-orange-700 border-orange-200",
     Critical: "bg-red-100 text-red-700 border-red-200",
 };
+
+
+/**
+ * predefined toxicity tpes
+ */
+export const TOXICITY_TYPES = ["Harassment", "Hate", "Threats", "Trolling", "Slurs", "Abuse", "Personal Attack", "Discrimination", "Spamming", "Toxic behavior",
+    "Bullying", "Cheating", "Custom"
+];

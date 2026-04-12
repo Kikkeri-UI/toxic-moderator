@@ -1,19 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Report } from "@/types";
 import { taggingSchema, TaggingFormValues } from "@/lib/validations/tagging";
-
-
-const TOXICITY_TYPES = ["Harassment", "Hate", "Threats", "Trolling", "Slurs", "Abuse", "Personal Attack", "Discrimination", "Spamming", "Toxic behavior",
-    "Bullying", "Cheating", "Custom"
-];
+import { TOXICITY_TYPES } from "@/constants"
 
 interface TaggingModalProps {
     report: Report | null;
@@ -23,6 +20,8 @@ interface TaggingModalProps {
 }
 
 export function TaggingModal({ report, isOpen, onClose, onSubmit }: TaggingModalProps) {
+
+    const [toxicityType, setToxicityType] = useState<any>(TOXICITY_TYPES);
     const form = useForm<TaggingFormValues>({
         resolver: zodResolver(taggingSchema),
         defaultValues: {
@@ -43,10 +42,33 @@ export function TaggingModal({ report, isOpen, onClose, onSubmit }: TaggingModal
         }
     }, [report, form]);
 
+
+    /**
+     * Processes form submission by merging standard selections and custom labels.
+     * * This handler performs three key actions:
+     * 1. Appends the 'customType' input to the selected types array if provided.
+     * 2. Updates the local UI state to include the new custom label as a persistent checkbox.
+     * 3. Triggers the parent onSubmit callback and resets the form state.
+     * * @param values - The validated form data from React Hook Form.
+     */
     const handleInternalSubmit = (values: TaggingFormValues) => {
         if (report) {
-            onSubmit(report.id, values);
+            let finalTypes = [...values.types];
+
+            // If the moderator types a custom type, add that to the 
+            // array of custom types we have
+            if (values.customType && values.customType.trim() !== "") {
+                finalTypes.push(values.customType.trim())
+                setToxicityType((prev: any) => [...prev, values?.customType?.trim()])
+            }
+
+            const submissionData = {
+                ...values,
+                types: finalTypes
+            }
+            onSubmit(report.id, submissionData);
             onClose();
+            form.reset();
         }
     };
 
@@ -81,7 +103,7 @@ export function TaggingModal({ report, isOpen, onClose, onSubmit }: TaggingModal
                                 <FormItem>
                                     <FormLabel className="text-xs font-bold uppercase tracking-wider">Violation Types</FormLabel>
                                     <div className="grid grid-cols-2 gap-2 mt-2">
-                                        {TOXICITY_TYPES.map((type) => (
+                                        {toxicityType.map((type: any) => (
                                             <FormField
                                                 key={type}
                                                 control={form.control}
@@ -108,6 +130,28 @@ export function TaggingModal({ report, isOpen, onClose, onSubmit }: TaggingModal
                                 </FormItem>
                             )}
                         />
+                        {/** Custom type */}
+                        <FormField
+                            control={form.control}
+                            name="customType"
+                            render={({ field }) => (
+                                <FormItem className="mt-4">
+                                    <FormLabel className="text-[10px] font-bold text-muted-foreground uppercase">
+                                        Or add custom label
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            placeholder="e.g., Stream Sniping, Griefing..."
+                                            className="h-8 text-sm"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+
 
                         {/* Impact Level */}
                         <FormField
