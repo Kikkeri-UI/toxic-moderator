@@ -58,7 +58,7 @@ function App() {
             Active Queue
           </TabsTrigger>
           <TabsTrigger value="processed" className="data-[state=active]: bg-background font-extrabold p-3 cursor-pointer">
-            Review History
+            Processed Reports
           </TabsTrigger>
         </TabsList>
         <TabsContent value="queue">

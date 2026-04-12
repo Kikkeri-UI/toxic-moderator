@@ -5,6 +5,9 @@ import {
 } from "@/components/ui/table";
 import { cn, formatDateTime } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { usePagination } from "@/hooks/use-pagination";
+import { PaginationComponent } from "@/components/ui/PaginationComponent"
+import { ITEMS_PER_PAGE, IMPACT_STYLES } from "@/constants"
 
 interface ProcessedQueueProps {
     reports: Report[]
@@ -12,17 +15,7 @@ interface ProcessedQueueProps {
 
 export const ProcessedQueue = ({ reports }: ProcessedQueueProps) => {
 
-    /**
-     * color coded badges to differentiate impact levels better
-     */
-    const IMPACT_STYLES = {
-        Low: "bg-blue-100 text-blue-700 border-blue-200",
-        Medium: "bg-yellow-100 text-yellow-700 border-yellow-200",
-        High: "bg-orange-100 text-orange-700 border-orange-200",
-        Critical: "bg-red-100 text-red-700 border-red-200",
-    };
-
-    console.log(reports)
+    const { currentPage, setCurrentPage, totalPages, startIndex, paginatedData } = usePagination(reports)
 
     return (
         <div className="space-y-4">
@@ -49,7 +42,7 @@ export const ProcessedQueue = ({ reports }: ProcessedQueueProps) => {
                             </TableRow>
                         ) : (<>
                             {
-                                reports.map((report) => (
+                                paginatedData.map((report) => (
                                     <TableRow key={report.id} className={cn("transition-colors bg-background")}>
                                         <TableCell className="font-medium text-sm">
                                             {report.message}
@@ -93,6 +86,13 @@ export const ProcessedQueue = ({ reports }: ProcessedQueueProps) => {
                     </TableBody>
                 </Table>
             </div>
+
+            {/** Pagination Controls */}
+            {
+                reports.length > ITEMS_PER_PAGE && (
+                    <PaginationComponent startIndex={startIndex} itemsPerPage={10} totalItems={reports.length} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+                )
+            }
         </div>
     )
 

@@ -10,22 +10,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Report } from "@/types";
-import { Tag, ChevronLeft, ChevronRight, Edit } from "lucide-react";
-import { cn, IMPACT_STYLES } from "@/lib/utils";
+import { Tag, Edit } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { usePagination } from "@/hooks/use-pagination";
+import { IMPACT_STYLES } from "@/constants"
+import { PaginationComponent } from "../ui/PaginationComponent";
+import { ITEMS_PER_PAGE } from "@/constants"
 
 interface MessageTableProps {
     reports: Report[];
     onTag: (report: Report) => void;
 }
 
-const ITEMS_PER_PAGE = 10;
-
 export function MessageTable({ reports, onTag }: MessageTableProps) {
-    const [currentPage, setCurrentPage] = useState(1);
 
-    const totalPages = Math.ceil(reports.length / ITEMS_PER_PAGE);
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const paginatedData = reports.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    const { currentPage, setCurrentPage, totalPages, startIndex, paginatedData } = usePagination(reports)
 
     return (
         <div className="space-y-4">
@@ -134,34 +133,7 @@ export function MessageTable({ reports, onTag }: MessageTableProps) {
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex items-center justify-between px-2">
-                <p className="text-xs text-muted-foreground font-medium">
-                    Showing <span className="text-foreground">{startIndex + 1}</span> to <span className="text-foreground">{Math.min(startIndex + ITEMS_PER_PAGE, reports.length)}</span> of <span className="text-foreground">{reports.length}</span> reports
-                </p>
-                <div className="flex items-center space-x-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                        className="h-8 w-8 p-0 cursor-pointer"
-                    >
-                        <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <div className="text-xs font-semibold">
-                        Page {currentPage} of {totalPages}
-                    </div>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                        className="h-8 w-8 p-0 cursor-pointer"
-                    >
-                        <ChevronRight className="h-4 w-4" />
-                    </Button>
-                </div>
-            </div>
+            <PaginationComponent startIndex={startIndex} itemsPerPage={ITEMS_PER_PAGE} totalItems={reports.length} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
         </div>
     );
 }
