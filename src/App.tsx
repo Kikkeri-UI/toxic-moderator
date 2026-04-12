@@ -6,6 +6,8 @@ import { ProcessedQueue } from "@/components/dashboard/processed-queue";
 import { useMemo, useState } from "react"
 import { TaggingModal } from "@/components/dashboard/tagging-modal"
 import { TaggingFormValues } from "./lib/validations/tagging";
+import { SearchComponent } from "./components/ui/SearchComponent";
+import { useDebounce } from "./hooks/use-debounce";
 
 
 export default function App() {
@@ -13,6 +15,9 @@ export default function App() {
   const { reports, stats, updateReport, rejectReport } = useReports();
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const debouncedSearchTerm = useDebounce(searchQuery, 500);
 
 
   /**
@@ -48,6 +53,18 @@ export default function App() {
     rejectReport(id, values)
   }
 
+
+  const filteredMessages = useMemo(() => {
+    if (searchQuery.trim() === "") return reports
+    const normalizedSearchQuery = debouncedSearchTerm.trim().toLowerCase()
+    return reports.filter((report) => {
+      if (report.message.toLowerCase().includes(normalizedSearchQuery)) {
+        return report
+      }
+    }
+    )
+  }, [reports, debouncedSearchTerm])
+
   return (
     <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <header className="mb-10">
@@ -57,6 +74,10 @@ export default function App() {
         </p>
       </header>
       <StatsBar stats={stats} />
+
+      <section className="filters flex justify-around">
+        <SearchComponent searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      </section>
       <Tabs defaultValue="queue" className="w-full">
         <TabsList className="mb-4 bg-muted/50 p-1">
           <TabsTrigger value="queue" className="data-[state=active]: bg-background font-extrabold p-3 cursor-pointer">
@@ -67,13 +88,14 @@ export default function App() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="queue">
-          <MessageTable reports={reports} onTag={handleOpenTagModal} />
+          <MessageTable reports={filteredMessages} onTag={handleOpenTagModal} />
         </TabsContent>
         <TabsContent value="processed">
           <ProcessedQueue reports={taggedReports} />
         </TabsContent>
 
       </Tabs>
+
 
       <TaggingModal
         report={selectedReport}
