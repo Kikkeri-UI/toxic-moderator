@@ -10,7 +10,7 @@ import { SearchComponent } from "./components/ui/SearchComponent";
 import { useDebounce } from "./hooks/use-debounce";
 import { FilterImpactComponent } from "./components/ui/FilterImpact";
 import { FilterStatusComponent } from "./components/ui/FilterStatus";
-
+import type { Report } from "@/types";
 
 export default function App() {
 
