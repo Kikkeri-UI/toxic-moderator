@@ -27,7 +27,7 @@ A high-performance, accessible, and type-safe moderation interface designed for 
 
 🛠️ Tech Stack
 
-  React 18,      
+  React 19,      
   TypeScript,            
   Vite,                 
   Tailwind CSS,          
