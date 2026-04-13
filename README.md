@@ -1,4 +1,4 @@
-🛡️ Toxicity Moderator Dashboard
+🛡️ Toxicity Moderator Dashboard:
 A high-performance, accessible, and type-safe moderation interface designed for processing system-flagged messages. This dashboard empowers moderators to categorize violations, assess severity, and maintain community safety with a streamlined, keyboard-friendly workflow.
 
 🔗 Live Link: 
@@ -27,16 +27,14 @@ A high-performance, accessible, and type-safe moderation interface designed for 
 
 🛠️ Tech Stack
 
-  Technology            Purpose
-
-  React 18              UI Library with concurrent rendering features
-  TypeScript            Static type checking for robust data modeling
-  Vite                  Linting-fast build tool
-  Tailwind CSS          Utility-first styling
-  Shadcn/UI             Radix-based accessible component prmitives
-  React Hook Form       Performance optimized for state management
-  Zod                   Schema validation 
-  Vitest & RTL          Unit testing
+  React 18,      
+  TypeScript,            
+  Vite,                 
+  Tailwind CSS,          
+  Shadcn/UI,           
+  React Hook Form,       
+  Zod,                   
+  Vitest & RTL,          
 
 
 ⚖️ Design decisions
