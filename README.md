@@ -1,73 +1,64 @@
-# React + TypeScript + Vite
+🛡️ Toxicity Moderator Dashboard
+A high-performance, accessible, and type-safe moderation interface designed for processing system-flagged messages. This dashboard empowers moderators to categorize violations, assess severity, and maintain community safety with a streamlined, keyboard-friendly workflow.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🔗 Live Link: 
+  Deployed using vercel. 
+  Visit site here: https://moderator-dashboard-woad.vercel.app/
 
-Currently, two official plugins are available:
+🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+  Prerequisites
+    Node.js: v18.0.0 or higher
+    Package Manager: npm
 
-## React Compiler
+  Setup instructions
+    1. Clone the repository
+    git clone https://github.com/Kikkeri-UI/toxic-moderator.git
+    cd toxic-moderator
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+    2. Install dependencies
+    npm install
 
-## Expanding the ESLint configuration
+    3. Run development server
+    npm run dev
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+    4. Run test suite
+    npm run test
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+🛠️ Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+  Technology            Purpose
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+  React 18              UI Library with concurrent rendering features
+  TypeScript            Static type checking for robust data modeling
+  Vite                  Linting-fast build tool
+  Tailwind CSS          Utility-first styling
+  Shadcn/UI             Radix-based accessible component prmitives
+  React Hook Form       Performance optimized for state management
+  Zod                   Schema validation 
+  Vitest & RTL          Unit testing
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+⚖️ Design decisions
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+  1. Unified Report State Management:
+    Instead of managing multiple arrays for "pending", "processed" and "invalid", I implemented a Centralized Data Store stratergy via theu useReports hook.
+
+  2. Derived State Stats Bar
+    The StatsBar numbers are calculated as derived state de=irectly from the main reports array.
+
+  3. Accessible Tagging Workflow
+    Usage of Shadcn ensured that the workflow is accessible using keyboard.
+
+  4. Pagination for data:
+    Since the data set is 120, I have opted for pagination over infinite scroll as pagination provides better information of data to moderators.
+    I included a cutom usePagination hook, which ensured that pagination is available throughout the application, making it scalable.
+
+🔮Future Roadmap:
+
+  1. Bulk Actions: Allowing moderators to tag multiple messages at once.
+  2. Persistance: Usage of local storage for data persitance and possibly even moving logic to backend and database.
+  3. Dark Mode: Provides better readability for moderators.
+
+Author: Sagar Bharadwaj K R
+Contact: sagarbharadwaj98@gmail.com 
