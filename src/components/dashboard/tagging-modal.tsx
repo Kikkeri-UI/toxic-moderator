@@ -102,7 +102,7 @@ export function TaggingModal({ report, isOpen, onClose, onSubmit, onReject }: Ta
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[500px] bg-card border-border sm:max-h-2/3 overflow-y-scroll">
+            <DialogContent className="sm:max-w-[500px] bg-card border-border max-h-[90vh] overflow-y-scroll">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-bold tracking-tight">
                         {report?.taggingDetails ? "Edit Review" : "Tag Message"}
