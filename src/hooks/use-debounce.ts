@@ -1,3 +1,7 @@
+/**
+ * Custom hook to debounce the search component
+ */
+
 import { useState, useEffect } from "react"
 
 export const useDebounce = (searchTerm: string, delay: number) => {

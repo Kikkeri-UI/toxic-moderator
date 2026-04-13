@@ -1,3 +1,7 @@
+/**
+ * Component resposible for displaying processed messages in a table
+ */
+
 import React, { useState, useEffect } from "react"
 import { Report } from "@/types";
 import {
